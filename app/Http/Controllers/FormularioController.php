@@ -48,19 +48,19 @@ class FormularioController extends Controller
 
     public function getResponses() {
 
-        $query1 = "SELECT * FROM entrega_turnos_verificacion_estado WHERE id_categoria_respuesta = 1";
+        $query1 = "SELECT * FROM entrega_turnos_verificacion_estado WHERE id_categoria_respuesta = 1 AND estado = 1";
 
         $result1 = DB::connection()->select(DB::raw($query1));
 
-        $query2 = "SELECT * FROM entrega_turnos_verificacion_estado WHERE id_categoria_respuesta = 2";
+        $query2 = "SELECT * FROM entrega_turnos_verificacion_estado WHERE id_categoria_respuesta = 2 AND estado = 1";
 
         $result2 = DB::connection()->select(DB::raw($query2));
 
-        $query3 = "SELECT * FROM entrega_turnos_verificacion_estado WHERE id_categoria_respuesta = 3";
+        $query3 = "SELECT * FROM entrega_turnos_verificacion_estado WHERE id_categoria_respuesta = 3 AND estado = 1";
 
         $result3 = DB::connection()->select(DB::raw($query3));
 
-        $query4 = "SELECT * FROM entrega_turnos_verificacion_estado WHERE id_categoria_respuesta = 4";
+        $query4 = "SELECT * FROM entrega_turnos_verificacion_estado WHERE id_categoria_respuesta = 4 AND estado = 1";
 
         $result4 = DB::connection()->select(DB::raw($query4));
 
