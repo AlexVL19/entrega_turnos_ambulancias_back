@@ -130,28 +130,36 @@ class FormularioController extends Controller
         $query_insert = "INSERT INTO entrega_turnos_bitacora (id_turno, id_movil, movil, placa, id_auxiliar,
         id_conductor, id_medico, danos_automotor, foto_automotor, comentarios_recibido)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        //Verifica si el string de base64 existe o no para empezar la operación
+        if ($request->foto_automotor != null || $request->foto_automotor != "") {
 
-        // Se almacena el string en base64 de la foto de la móvil
-        $imagen = $request->foto_automotor;
+             // Se almacena el string en base64 de la foto de la móvil
+             $imagen = $request->foto_automotor;
+     
+             //Se reemplaza el identificador al inicio del texto por un string vacío
+             $imagen = str_replace('data:image/png;base64', '', $imagen);
+     
+             //Se reemplaza ese espacio por un caracter
+             $imagen = str_replace(' ', '+', $imagen);
+     
+             //Se almacena el nombre de la imagen, que es la placa de la móvil
+             $imagen_nombre = $request->placa;
+     
+             //Se consigue la fecha actual
+             $fecha_imagen = date("Y-m-d");
+     
+             /* Se almacena en una variable la propia ruta de la imagen, en dónde se va a almacenar y que nombre
+                va a tener. */
+             $imagen_ruta = 'danos_movil/' . $request->id_movil . '/' . $imagen_nombre . $fecha_imagen . '.png';
+     
+             // Se junta la ruta con la imagen ya decodificada, y se guarda en el almacenamiento
+             Storage::put($imagen_ruta, base64_decode($imagen));
+        }
 
-        //Se reemplaza el identificador al inicio del texto por un string vacío
-        $imagen = str_replace('data:image/png;base64', '', $imagen);
-
-        //Se reemplaza ese espacio por un caracter
-        $imagen = str_replace(' ', '+', $imagen);
-
-        //Se almacena el nombre de la imagen, que es la placa de la móvil
-        $imagen_nombre = $request->placa;
-
-        //Se consigue la fecha actual
-        $fecha_imagen = date("Y-m-d");
-
-        /* Se almacena en una variable la propia ruta de la imagen, en dónde se va a almacenar y que nombre
-           va a tener. */
-        $imagen_ruta = 'danos_movil/' . $request->id_movil . '/' . $imagen_nombre . $fecha_imagen . '.png';
-
-        // Se junta la ruta con la imagen ya decodificada, y se guarda en el almacenamiento
-        Storage::put($imagen_ruta, base64_decode($imagen));
+        else {
+            $imagen_ruta = null;
+        }
 
         // Se ejecuta la query, tomando todos los valores de la petición y la ruta de la imagen
         DB::connection()->select(DB::raw($query_insert),
