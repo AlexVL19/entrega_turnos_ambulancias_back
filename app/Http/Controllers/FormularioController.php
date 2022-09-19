@@ -39,12 +39,17 @@ class FormularioController extends Controller
 
         $result4 = DB::connection()->select(DB::raw($query4));
 
+        $query_contador = "SELECT id_verificacion_tipo FROM entrega_turnos_verificacion_tipo";
+
+        $resultado_contador = DB::connection()->select(DB::raw($query_contador));
+
         //Se agrupan las respuestas en un JSON, agrupando las verificaciones con su respectiva clave.
         return response(json_encode([
             "verificacion" => $result1,
             "estado_vehiculo" => $result2,
             "herramientas" => $result3,
-            "equipos" => $result4
+            "equipos" => $result4,
+            "contador" => $resultado_contador
         ]));
     }
 
@@ -88,7 +93,7 @@ class FormularioController extends Controller
         ]);
 
         /* Se recorre cada posición del objeto Request y se hace lo siguiente: */
-        for ($index = 0; $index <= 61; $index++) { 
+        for ($index = 0; $index < 72; $index++) { 
 
             /* Por cada posición, hace una query para insertar */
             $query = "INSERT INTO entrega_turnos_verificacion_bitacora 
@@ -128,8 +133,9 @@ class FormularioController extends Controller
 
         /* Se efectúa una query de inserción */
         $query_insert = "INSERT INTO entrega_turnos_bitacora (id_turno, id_movil, movil, placa, id_auxiliar,
-        id_conductor, id_medico, danos_automotor, foto_automotor, comentarios_recibido)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        id_conductor, id_medico, danos_automotor, foto_automotor, comentarios_conductor, 
+        comentarios_auxiliar, comentarios_recibido)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         //Verifica si el string de base64 existe o no para empezar la operación
         if ($request->foto_automotor != null || $request->foto_automotor != "") {
@@ -165,6 +171,6 @@ class FormularioController extends Controller
         DB::connection()->select(DB::raw($query_insert),
         [$request->id_turno, $request->id_movil, $request->movil, $request->placa, $request->id_auxiliar,
         $request->id_conductor, $request->id_medico, $request->danos_automotor, $imagen_ruta,
-        $request->comentarios_recibido]);
+        $request->comentarios_conductor, $request->comentarios_auxiliar, $request->comentarios_recibido]);
     }
 }
