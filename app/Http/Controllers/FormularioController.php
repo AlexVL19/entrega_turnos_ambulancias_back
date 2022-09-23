@@ -15,42 +15,28 @@ class FormularioController extends Controller
     }
 
     public function getVerifications () {
-
-        //Consigue el ID de tipo de verificación y el tipo cuya categoría de verificación sea 1, 2, 3 y 4
-
-        $query1 = "SELECT id_verificacion_tipo, tipo_verificacion FROM entrega_turnos_verificacion_tipo WHERE
-        id_categoria_verificacion = 1";
+        $query1 = "SELECT id_verificacion_tipo, tipo_verificacion, id_categoria_verificacion FROM entrega_turnos_verificacion_tipo";
 
         //Se ejecutan las mismas queries almacenándolas en una variable que contendrá una respuesta
         $result1 = DB::connection()->select(DB::raw($query1));
 
-        $query2 = "SELECT id_verificacion_tipo, tipo_verificacion FROM entrega_turnos_verificacion_tipo WHERE
-        id_categoria_verificacion = 2";
-
-        $result2 = DB::connection()->select(DB::raw($query2));
-
-        $query3 = "SELECT id_verificacion_tipo, tipo_verificacion FROM entrega_turnos_verificacion_tipo WHERE
-        id_categoria_verificacion = 3";
-
-        $result3 = DB::connection()->select(DB::raw($query3));
-
-        $query4 = "SELECT id_verificacion_tipo, tipo_verificacion FROM entrega_turnos_verificacion_tipo WHERE
-        id_categoria_verificacion = 4";
-
-        $result4 = DB::connection()->select(DB::raw($query4));
-
-        $query_contador = "SELECT id_verificacion_tipo FROM entrega_turnos_verificacion_tipo";
+        $query_contador = "SELECT COUNT(id_verificacion_tipo) as cuenta FROM entrega_turnos_verificacion_tipo";
 
         $resultado_contador = DB::connection()->select(DB::raw($query_contador));
 
         //Se agrupan las respuestas en un JSON, agrupando las verificaciones con su respectiva clave.
         return response(json_encode([
-            "verificacion" => $result1,
-            "estado_vehiculo" => $result2,
-            "herramientas" => $result3,
-            "equipos" => $result4,
+            "formulario" => $result1,
             "contador" => $resultado_contador
         ]));
+    }
+
+    public function getCategories() {
+        $query_categories = "SELECT * FROM entrega_turnos_categoria_verificacion";
+
+        $result_cat = DB::connection()->select(DB::raw($query_categories));
+
+        return $result_cat;
     }
 
     public function getResponses() {

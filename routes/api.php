@@ -27,6 +27,7 @@ Route::controller(FormularioController::class)->group(function () {
     Route::get('/getResponses', 'getResponses');
     Route::post('/insertIntoBitacora', 'insertIntoBitacora');
     Route::post('insertIntoMain', 'insertIntoMainBitacora');
+    Route::get('/getCategories', 'getCategories');
 });
 
 Route::controller(LoginController::class)->group(function () {
